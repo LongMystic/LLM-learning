@@ -1,0 +1,15 @@
+# Section 01: Foundations
+torch
+transformers
+accelerate
+datasets
+einops
+numpy
+pandas
+pyarrow
+tiktoken
+
+# Section 02: LLM APIs & Prompts
+openai
+python-dotenv
+requests
