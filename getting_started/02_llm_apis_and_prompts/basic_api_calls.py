@@ -75,17 +75,17 @@ def call_ollama(prompt, model="llama3.2", temperature=0.7, max_tokens=256):
 
 if __name__ == "__main__":
     # Example 1: OpenAI
-    print("=== OpenAI Example ===")
-    messages = [
-        {"role": "user", "content": "What is a transformer in machine learning? Answer in one sentence."}
-    ]
-    try:
-        result = call_openai(messages, temperature=0.3)
-        print(result)
-    except Exception as e:
-        print(f"OpenAI error (check your API key): {e}")
+    # print("=== OpenAI Example ===")
+    # messages = [
+    #     {"role": "user", "content": "What is a transformer in machine learning? Answer in one sentence."}
+    # ]
+    # try:
+    #     result = call_openai(messages, temperature=0.3)
+    #     print(result)
+    # except Exception as e:
+    #     print(f"OpenAI error (check your API key): {e}")
     
-    print("\n" + "="*50 + "\n")
+    # print("\n" + "="*50 + "\n")
     
     # Example 2: Ollama
     print("=== Ollama Example ===")

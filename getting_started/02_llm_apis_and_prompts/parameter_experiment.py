@@ -1,43 +1,49 @@
 """
 Experiment with different temperature and top_p values
 Shows how parameters affect output creativity/consistency
+Uses Ollama (local) instead of OpenAI API
 """
 
-from openai import OpenAI
-import os
+from basic_api_calls import call_ollama
 import csv
 from datetime import datetime
-from dotenv import load_dotenv
+import requests
 
-load_dotenv()
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
-
-def generate_with_params(prompt, temperature, top_p=None):
+def generate_with_params(prompt, temperature=None, top_p=None, model="llama3.2"):
     """
-    Generate response with specific parameters
+    Generate response with specific parameters using Ollama
     
     Args:
-        prompt: The prompt to use
-        temperature: Controls randomness (0.0 = deterministic, 2.0 = very random)
+        prompt: The prompt to use (plain text)
+        temperature: Controls randomness (0.0 = deterministic, 1.0 = very random)
         top_p: Nucleus sampling - alternative to temperature (0.1 = conservative, 1.0 = diverse)
+        model: Ollama model name (default: llama3.2)
     
-    Note: Use either temperature OR top_p, not both (they control similar things)
+    Note: Ollama supports both temperature and top_p, but we'll use one at a time for comparison
     """
-    params = {
-        "model": "gpt-4o-mini",
-        "messages": [{"role": "user", "content": prompt}],
-        "max_tokens": 100,
+    url = "http://localhost:11434/api/generate"
+    
+    payload = {
+        "model": model,
+        "prompt": prompt,
+        "num_predict": 100,  # max tokens
+        "stream": False,
     }
     
+    # Set temperature or top_p (Ollama supports both, but we test them separately)
     if top_p is not None:
-        params["top_p"] = top_p
-        # Don't set temperature when using top_p
+        payload["top_p"] = top_p
+        # Don't set temperature when testing top_p
+    elif temperature is not None:
+        payload["temperature"] = temperature
     else:
-        params["temperature"] = temperature
+        # Default if neither is provided
+        payload["temperature"] = 0.7
     
-    response = client.chat.completions.create(**params)
-    return response.choices[0].message.content
+    response = requests.post(url, json=payload)
+    response.raise_for_status()
+    
+    return response.json()["response"]
 
 
 def run_experiment():
@@ -112,11 +118,12 @@ def explain_parameters():
     """
     explanations = {
         "temperature": {
-            "range": "0.0 to 2.0",
+            "range": "0.0 to 1.0 (Ollama)",
             "meaning": "Controls randomness in token selection",
             "low (0.0-0.3)": "Deterministic, consistent outputs. Good for: classification, extraction, code generation",
             "medium (0.5-0.7)": "Balanced creativity. Good for: general chat, writing",
-            "high (0.8-2.0)": "Very creative, unpredictable. Good for: creative writing, brainstorming",
+            "high (0.8-1.0)": "Very creative, unpredictable. Good for: creative writing, brainstorming",
+            "note": "Ollama typically uses 0.0-1.0 range (vs OpenAI's 0.0-2.0)",
         },
         "top_p": {
             "range": "0.0 to 1.0",
@@ -146,8 +153,10 @@ def explain_parameters():
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("LLM Parameter Experiment")
+    print("LLM Parameter Experiment (using Ollama)")
     print("=" * 60)
+    print("\nNote: Make sure Ollama is running (ollama serve)")
+    print("      and you have a model pulled (e.g., ollama pull llama3.2)\n")
     
     # Show parameter explanations
     explain_parameters()
@@ -156,5 +165,15 @@ if __name__ == "__main__":
     input("\nPress Enter to run the experiment...")
     
     # Run the experiment
-    results = run_experiment()
+    try:
+        results = run_experiment()
+    except requests.exceptions.ConnectionError:
+        print("\n" + "=" * 60)
+        print("ERROR: Cannot connect to Ollama!")
+        print("Make sure Ollama is running:")
+        print("  1. Start Ollama: ollama serve")
+        print("  2. Pull a model: ollama pull llama3.2")
+        print("=" * 60)
+    except Exception as e:
+        print(f"\nError: {e}")
 

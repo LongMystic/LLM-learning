@@ -1,0 +1,8 @@
+experiment,temperature,top_p,response,timestamp
+temp_0.0,0.0,,"""Wake up to the moment, brewed to perfection.""",2026-01-05T22:45:45.252026
+temp_0.3,0.3,,"""Wake up to the art of moments, brewed with love.""",2026-01-05T22:45:47.490880
+temp_0.7,0.7,,"""Wake up to the art of connection""",2026-01-05T22:45:49.696378
+temp_1.0,1.0,,"""Fuel your daydreams, one cup at a time.""",2026-01-05T22:45:52.314495
+topp_0.1,,0.1,"""Fuel your curiosity, one cup at a time.""",2026-01-05T22:45:54.976767
+topp_0.5,,0.5,"""Fuel your journey, one cup at a time.""",2026-01-05T22:45:57.606194
+topp_0.9,,0.9,"""Where every sip is a moment to savor, and every moment is a reason to raise your cup.""",2026-01-05T22:46:00.316112

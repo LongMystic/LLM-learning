@@ -4,17 +4,28 @@ Each function demonstrates a different technique
 """
 
 from openai import OpenAI
-import os
-from dotenv import load_dotenv
 import json
-
-load_dotenv()
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+from basic_api_calls import call_ollama
+import requests
 
 
 # ============================================
 # Pattern 1: Zero-shot (no examples)
 # ============================================
+
+def call_ollama(prompt, model="llama3.2", temperature=0.7, max_tokens=256):
+    url = "http://localhost:11434/api/generate"
+    payload = {
+        "model": model,
+        "prompt": prompt,
+        "temperature": temperature,
+        "num_predict": max_tokens,
+        "stream": False,
+    }
+    response = requests.post(url, json=payload)
+    response.raise_for_status()
+    return response.json()["response"]
+
 
 def zero_shot_classification(text):
     """
@@ -22,16 +33,15 @@ def zero_shot_classification(text):
     Good for: Simple tasks, model already understands the pattern
     """
     prompt = f"""Classify the sentiment of this text as positive, negative, or neutral.
-
-Text: {text}
-Sentiment:"""
+        Text: {text}
+        Sentiment:
+    """
     
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.3,
+    response = call_ollama(
+        prompt=prompt,
+        temperature=0.3
     )
-    return response.choices[0].message.content
+    return response
 
 
 # ============================================
@@ -62,12 +72,11 @@ Category: Question
 Feedback: {text}
 Category:"""
     
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.3,
+    response = call_ollama(
+        prompt=prompt,
+        temperature=0.3
     )
-    return response.choices[0].message.content
+    return response
 
 
 # ============================================
@@ -85,12 +94,11 @@ Question: {question}
 
 Let's think through this step by step:"""
     
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.5,
+    response = call_ollama(
+        prompt=prompt,
+        temperature=0.5
     )
-    return response.choices[0].message.content
+    return response
 
 
 # ============================================
@@ -121,12 +129,11 @@ Style:
 
 Response:"""
     
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.4,
+    response = call_ollama(
+        prompt=prompt,
+        temperature=0.4
     )
-    return response.choices[0].message.content
+    return response
 
 
 # ============================================
@@ -136,7 +143,6 @@ Response:"""
 def structured_json_extraction(text):
     """
     Extract structured data as JSON
-    Use response_format={"type": "json_object"} to force JSON output
     """
     prompt = f"""Extract information from this text and return it as JSON.
 
@@ -148,18 +154,15 @@ Return a JSON object with these fields:
 - "date": date mentioned (or null)
 - "sentiment": overall sentiment (positive/negative/neutral)
 
-JSON:"""
+Return ONLY the JSON object.
+"""
     
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[{"role": "user", "content": prompt}],
+    response = call_ollama(
+        prompt=prompt,
         temperature=0.2,
-        response_format={"type": "json_object"},  # Forces JSON output
     )
     
-    result = response.choices[0].message.content
-    # Parse JSON to validate it's valid
-    return json.loads(result)
+    return response
 
 
 # ============================================
@@ -168,22 +171,32 @@ JSON:"""
 
 if __name__ == "__main__":
     print("=== Zero-shot Classification ===")
-    result = zero_shot_classification("I love this product!")
+    zero_shot_prompt = "I love this product!"
+    print(f"Zero-shot prompt: {zero_shot_prompt}")
+    result = zero_shot_classification(zero_shot_prompt)
     print(result)
     
     print("\n=== Few-shot Classification ===")
-    result = few_shot_classification("The dashboard is too slow")
+    few_shot_prompt = "The dashboard is too slow"
+    print(f"Few-shot prompt: {few_shot_prompt}")
+    result = few_shot_classification(few_shot_prompt)
     print(result)
     
     print("\n=== Chain-of-Thought ===")
-    result = chain_of_thought_reasoning("If a train travels 60 mph for 2 hours, how far does it go?")
+    chain_of_thought_prompt = "If a train travels 60 mph for 2 hours, how far does it go?"
+    print(f"Chain-of-thought prompt: {chain_of_thought_prompt}")
+    result = chain_of_thought_reasoning(chain_of_thought_prompt)
     print(result)
     
     print("\n=== Structured Prompt ===")
-    result = structured_prompt("How should I handle missing data in a pandas DataFrame?")
+    structured_prompt_str = "How should I handle missing data in a pandas DataFrame?"
+    print(f"Structured prompt: {structured_prompt_str}")
+    result = structured_prompt(structured_prompt_str)
     print(result)
     
     print("\n=== JSON Extraction ===")
-    result = structured_json_extraction("John visited Paris on March 15th. He had a wonderful time!")
+    json_extraction_prompt = "John visited Paris on March 15th. He had a wonderful time!"
+    print(f"JSON extraction prompt: {json_extraction_prompt}")
+    result = structured_json_extraction(json_extraction_prompt)
     print(json.dumps(result, indent=2))
 
