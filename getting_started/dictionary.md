@@ -140,5 +140,141 @@ The **maximum number of tokens** the model will generate in its response.
 
 ---
 
-*More terms will be added here as you progress through sections 03–07.*
+## RAG (Retrieval-Augmented Generation)
+
+A technique that combines **retrieval** (finding relevant documents) with **generation** (LLM creating answers).
+
+**How it works:**
+1. User asks a question
+2. System retrieves relevant chunks from documents
+3. System adds those chunks as context to the prompt
+4. LLM generates answer using both its knowledge AND the retrieved context
+
+**Why use RAG?**
+- LLMs have training cutoff dates (don't know recent info)
+- LLMs can't access your private documents
+- Provides **grounded answers** (based on actual sources)
+- Reduces hallucinations
+
+**Analogy:** Like giving a student a textbook during an exam, instead of relying only on memory.
+
+---
+
+## Embedding
+
+A **vector representation** of text (array of numbers).
+
+- Similar texts → similar vectors (close in vector space)
+- Enables **semantic search** (find meaning, not just keywords)
+- Example: "machine learning" and "ML" have similar embeddings even though words are different
+
+**Example:**
+```
+"machine learning" → [0.2, -0.5, 0.8, 0.1, ...] (vector of 384 numbers)
+"deep learning"   → [0.3, -0.4, 0.7, 0.2, ...] (similar vector)
+```
+
+**For data engineers:** Like creating a hash, but for semantic similarity instead of exact matches.
+
+---
+
+## Chunking
+
+Breaking long documents into **smaller pieces** (chunks) for better retrieval.
+
+- Vector search works better on smaller, focused pieces
+- Overlap between chunks prevents losing context at boundaries
+- Typical chunk size: 256-1024 tokens
+
+**Example:**
+```
+Long document (5000 chars)
+↓
+Chunk 1: chars 0-512
+Chunk 2: chars 462-974 (overlap of 50 chars)
+Chunk 3: chars 924-1436 (overlap of 50 chars)
+```
+
+**For data engineers:** Like partitioning a large table into smaller, manageable pieces.
+
+---
+
+## Vector Store
+
+A database optimized for storing and searching **vectors** (embeddings).
+
+- Stores: document text, embedding vectors, metadata
+- Enables fast similarity search (find similar vectors)
+- Examples: Chroma, FAISS, Pinecone, Weaviate
+
+**For data engineers:** Like a NoSQL database, but optimized for vector similarity queries instead of key-value lookups.
+
+---
+
+## Retrieval
+
+Finding **relevant document chunks** for a user's question.
+
+**Process:**
+1. Convert query to embedding (same model as documents)
+2. Search vector store for most similar document embeddings
+3. Return top-k most similar chunks
+
+**Similarity calculation:**
+- Usually **cosine similarity** (angle between vectors)
+- Or **Euclidean distance** (straight-line distance)
+- Lower distance / higher similarity = more relevant
+
+**For data engineers:** Like a JOIN operation, but matching on semantic similarity instead of exact keys.
+
+---
+
+## Reranking
+
+**Reordering** retrieved chunks using a more powerful model to improve relevance.
+
+**Two-stage process:**
+1. **Retrieve more** (e.g., top 10) using fast vector search
+2. **Rerank** using slower but more accurate model (CrossEncoder)
+3. **Take top-k** after reranking (e.g., top 3)
+
+**Trade-off:**
+- ✅ Better relevance
+- ❌ Slower (reranking model is expensive)
+
+**For data engineers:** Like a two-stage query: fast index scan, then detailed evaluation of candidates.
+
+---
+
+## Grounding
+
+Ensuring that an answer is **based on** the retrieved context, not hallucinated.
+
+- **Grounded answer**: Supported by retrieved documents
+- **Ungrounded answer**: Made up or from LLM's training data (not from your documents)
+
+**Why it matters:**
+- RAG's main benefit is providing grounded answers
+- If answers aren't grounded, RAG isn't working as intended
+
+**How to check:**
+- Simple: Check if key words from answer appear in retrieved chunks
+- Advanced: Use LLM-as-judge to verify answer is supported by context
+
+---
+
+## Metadata Filtering
+
+Filtering retrieved chunks by **additional information** (source, date, type, etc.).
+
+**Example filters:**
+- Only search in documents from 2024
+- Only search in API documentation
+- Exclude certain sources
+
+**For data engineers:** Like adding WHERE conditions to a SELECT query, but for vector search.
+
+---
+
+*More terms will be added here as you progress through sections 04–07.*
 

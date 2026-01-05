@@ -13,3 +13,8 @@ tiktoken
 openai
 python-dotenv
 requests
+
+# Section 03: RAG
+sentence-transformers
+chromadb
+scikit-learn
