@@ -31,7 +31,7 @@ USE_4BIT = True  # True = 4-bit (QLoRA) khi có GPU + bitsandbytes
 
 
 def _load_model_qlora(use_cuda: bool):
-    """Load model 4-bit (QLoRA) nếu có GPU + bitsandbytes; không thì load full precision (fallback)."""
+    """Load model 4-bit (QLoRA) khi có GPU + bitsandbytes."""
     try:
         from transformers import BitsAndBytesConfig
         bnb_config = BitsAndBytesConfig(
@@ -48,14 +48,6 @@ def _load_model_qlora(use_cuda: bool):
             trust_remote_code=True,
         )
     except Exception as e:
-        if not use_cuda:
-            print("Không dùng 4-bit (CPU/Windows). Fallback: LoRA full precision, lưu vào qlora_run.")
-            return AutoModelForCausalLM.from_pretrained(
-                DEFAULT_MODEL_NAME,
-                torch_dtype=torch.float32,
-                device_map="cpu",
-                trust_remote_code=True,
-            )
         print(f"Lỗi QLoRA: {e}. Cài: pip install bitsandbytes (Linux/WSL khuyến nghị).")
         raise
 
@@ -63,7 +55,8 @@ def _load_model_qlora(use_cuda: bool):
 def main():
     use_cuda = torch.cuda.is_available()
     if not use_cuda:
-        print("Không có GPU. Sẽ dùng LoRA full precision (fallback), lưu vào qlora_run.")
+        print("Không có GPU → bỏ qua 05.3 (QLoRA). Dùng 05.2 (LoRA) là đủ trên CPU.")
+        return
 
     print("Load dataset...")
     dataset = prepare_dataset()
