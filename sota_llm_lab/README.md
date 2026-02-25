@@ -11,8 +11,9 @@ Mục tiêu: nắm vững các chủ đề LLM hiện đại và **tự tay buil
 - **04_rag_advanced**: RAG nâng cao (hybrid search, reranking, chunking thông minh, query rewriting).
 - **05_finetuning_peft**: Fine-tune LLM bằng PEFT (LoRA/QLoRA) cho domain cụ thể.
 - **06_serving_llmops**: Tối ưu serving & LLMOps (vLLM, quantization, deploy local/self-host).
-- **07_reasoning_planning**: Kỹ thuật reasoning (CoT, ToT, self-reflection) và đánh giá.
-- **08_multimodal_moe**: Multimodal, MoE, và các kiến trúc mới.
+- **07_evaluation_llmops**: Đánh giá LLM, logging, monitoring, LLMOps cơ bản.
+- **08_reasoning_planning**: Kỹ thuật reasoning (CoT, ToT, self-reflection) và planning nâng cao.
+- **09_multimodal_moe**: Multimodal, MoE, và các kiến trúc mới.
 
 Bạn có thể đi **tuần tự từ 00 → 08**, hoặc tập trung sâu từng module.
 
@@ -24,7 +25,7 @@ Bạn có thể đi **tuần tự từ 00 → 08**, hoặc tập trung sâu từ
 2. **01_mcp** (3–5 ngày)
 3. **02_agents** (5–7 ngày)
 4. **03_agentic_ai** (7–10 ngày)
-5. Sau đó chọn tiếp: **04** (RAG) → **05** (fine-tuning) → **06** (serving) → **07–08** (reasoning, multimodal, MoE).
+5. Sau đó chọn tiếp: **04** (RAG) → **05** (fine-tuning) → **06** (serving) → **07** (evaluation/LLMOps) → **08–09** (reasoning, multimodal, MoE).
 
 ---
 

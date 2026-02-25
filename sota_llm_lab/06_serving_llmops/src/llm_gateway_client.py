@@ -34,8 +34,9 @@ def chat_via_gateway(
     # Nếu gateway trả raw từ Ollama native:
     # data["message"]["content"]
     try:
-        return data["message"]["content"]
+        return data["choices"][0]["message"]["content"]
     except Exception:
+        print("RETURN RAW!!!")
         return str(data)
 
 

@@ -1,0 +1,5 @@
+{"id": "q1", "category": "rag", "model": "qwen3:4b", "prompt": "Tóm tắt ngắn gọn mục tiêu của module 04 trong project này.", "answer": "", "ok": true, "error": null, "latency_sec": 12.148737668991089}
+{"id": "q2", "category": "agentic", "model": "qwen3:4b", "prompt": "Giải thích Orchestrator trong Agentic AI là gì, tối đa 3 câu.", "answer": "", "ok": true, "error": null, "latency_sec": 11.351938247680664}
+{"id": "q3", "category": "mcp", "model": "qwen3:4b", "prompt": "MCP dùng để làm gì trong kiến trúc LLM hiện đại?", "answer": "", "ok": true, "error": null, "latency_sec": 11.316476583480835}
+{"id": "q4", "category": "coding", "model": "qwen3:4b", "prompt": "Hãy mô tả flow cơ bản của một multi-agent research + writer.", "answer": "", "ok": true, "error": null, "latency_sec": 10.860069751739502}
+{"id": "q5", "category": "politeness", "model": "qwen3:4b", "prompt": "Viết email lịch sự xin lỗi khách hàng vì giao hàng chậm.", "answer": "", "ok": true, "error": null, "latency_sec": 10.9622483253479}

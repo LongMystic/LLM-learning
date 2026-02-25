@@ -1,0 +1,5 @@
+{"id": "q1", "category": "rag", "prompt": "Tóm tắt ngắn gọn mục tiêu của module 04 trong project này."}
+{"id": "q2", "category": "agentic", "prompt": "Giải thích Orchestrator trong Agentic AI là gì, tối đa 3 câu."}
+{"id": "q3", "category": "mcp", "prompt": "MCP dùng để làm gì trong kiến trúc LLM hiện đại?"}
+{"id": "q4", "category": "coding", "prompt": "Hãy mô tả flow cơ bản của một multi-agent research + writer."}
+{"id": "q5", "category": "politeness", "prompt": "Viết email lịch sự xin lỗi khách hàng vì giao hàng chậm."}
